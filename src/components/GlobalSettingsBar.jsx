@@ -9,7 +9,9 @@ const GlobalSettingsBar = ({
   setPool,
   totalBalance,
   isLoadingTotalBalance,
-  onSaveSettings
+  onSaveSettings,
+  username,
+  onLogout
 }) => {
   return (
     <div className="global-settings-bar">
@@ -71,6 +73,12 @@ const GlobalSettingsBar = ({
           <div className="setting-item total-balance-display">
             <label>Total Balance</label>
             <span>{totalBalance !== undefined ? totalBalance.toFixed(3) : '0.000'} SOL</span>
+          </div>
+        )}
+        {username && (
+          <div className="setting-item user-info-display" style={{ display: 'flex', alignItems: 'center', marginRight: '15px' }}>
+            <span title="Logged in user" style={{ marginRight: '10px' }}>User: {username}</span>
+            <button onClick={onLogout} className="logout-button minimal-button" style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
           </div>
         )}
         <button onClick={onSaveSettings} className="save-settings-button">

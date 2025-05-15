@@ -356,12 +356,6 @@ function App() {
             Logs
           </button>
         </div>
-        {isAuthenticated && loggedInUsername && (
-          <div className="user-info" style={{ color: 'white', marginRight: '20px', display: 'flex', alignItems: 'center' }}>
-            <span style={{ marginRight: '10px' }}>User: {loggedInUsername}</span>
-            <button onClick={handleLogout} className="nav-button logout-button">Logout</button>
-          </div>
-        )}
       </header>
       
       {activeWindow === 'main' ? (

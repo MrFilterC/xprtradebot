@@ -15,41 +15,29 @@ const LoginPage = ({ onLoginSuccess }) => {
     setError('');
 
     try {
-      // RLS politikalarınız `current_setting` kullandığı için,
-      // bu direkt sorgu RLS tarafından engellenebilir.
-      // Normalde, RLS olmadan veya daha basit bir 'select' politikasıyla şöyle bir sorgu yapardık:
       const { data, error: queryError } = await supabase
         .from('allowed_users')
         .select('*')
         .eq('username', username)
         .eq('invite_code', inviteCode)
-        .single(); // Tek bir kayıt bekliyoruz
+        .single();
 
-      if (queryError) {
-        // Eğer RLS engelliyorsa veya başka bir sorgu hatası varsa buraya düşer.
-        // Supabase'in döndürdüğü hataya göre RLS politikasını gözden geçirmemiz gerekebilir.
-        console.error('Supabase query error:', queryError);
-        setError(`Login failed: ${queryError.message}. Check RLS policies or credentials.`);
+      if (queryError || !data) {
+        console.error('Supabase query error or no data:', queryError);
+        setError('Invalid username or invite code. Please try again.');
         setLoading(false);
         return;
       }
 
       if (data) {
-        // Başarılı giriş
         console.log('Login successful:', data);
-        // Burada kullanıcı oturumunu yönetmek için bir mekanizma ekleyebilirsiniz.
-        // Örneğin, bir token saklayabilir veya bir context güncelleyebilirsiniz.
-        localStorage.setItem('userAuthenticated', 'true'); // Basit bir örnek
+        localStorage.setItem('userAuthenticated', 'true');
         localStorage.setItem('username', data.username);
         
         if (onLoginSuccess) {
           onLoginSuccess(); 
         }
-        // navigate('/dashboard'); // Ana sayfaya yönlendirme (react-router-dom ile)
-        window.location.reload(); // Veya sayfayı yeniden yükleyerek App.jsx'in durumu kontrol etmesini sağlayın
-      } else {
-        // Kullanıcı bulunamadı veya bilgiler yanlış
-        setError('Invalid username or invite code.');
+        window.location.reload();
       }
     } catch (catchError) {
       console.error('Login error:', catchError);
