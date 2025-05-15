@@ -4,7 +4,7 @@
 /build
 
 # Supabase client file with credentials
-src/supabaseClient.js
+# src/supabaseClient.js
 
 # Environment variables
 .env
