@@ -13,6 +13,9 @@ const GlobalSettingsBar = ({
   username,
   onLogout
 }) => {
+  console.log('GlobalSettingsBar username prop:', username);
+  console.log('GlobalSettingsBar onLogout prop defined:', typeof onLogout === 'function');
+
   return (
     <div className="global-settings-bar">
       <div className="settings-cluster">
@@ -77,8 +80,23 @@ const GlobalSettingsBar = ({
         )}
         {username && (
           <div className="setting-item user-info-display" style={{ display: 'flex', alignItems: 'center', marginRight: '15px' }}>
-            <span title="Logged in user" style={{ marginRight: '10px' }}>User: {username}</span>
-            <button onClick={onLogout} className="logout-button minimal-button" style={{ backgroundColor: '#f44336', color: 'white', border: 'none', padding: '6px 12px', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
+            <span 
+              title="Logged in user" 
+              style={{ 
+                marginRight: '10px', 
+                fontSize: 'inherit',
+                color: 'inherit'
+              }}
+            >
+              {username}
+            </span>
+            <button 
+              onClick={onLogout} 
+              className="save-settings-button"
+              style={{ backgroundColor: '#6c757d', borderColor: '#6c757d' }}
+            >
+              Logout
+            </button>
           </div>
         )}
         <button onClick={onSaveSettings} className="save-settings-button">
