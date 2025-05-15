@@ -1,0 +1,73 @@
+.toast-notifications-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999; /* Diğer elementlerin üzerinde görünmesi için çok yüksek bir değer */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast-notification {
+  min-width: 250px;
+  max-width: 350px;
+  padding: 12px 18px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0.95;
+  animation: toast-fade-in 0.3s ease-out;
+}
+
+@keyframes toast-fade-in {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 0.95; }
+}
+
+/* Different types of toasts */
+.toast-success {
+  background-color: #4CAF50; /* Green */
+}
+
+.toast-error {
+  background-color: #F44336; /* Red */
+}
+
+.toast-info {
+  background-color: #2196F3; /* Blue */
+}
+
+.toast-warning {
+  background-color: #FF9800; /* Orange */
+}
+
+.toast-contract {
+  background-color: #00BCD4; /* Cyan / Light Blue */
+  /* color: #000; Optional: if a light background needs dark text */
+}
+
+.toast-message {
+  flex-grow: 1;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-right: 10px; /* Butonla arasında boşluk */
+}
+
+.toast-close-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.toast-close-button:hover {
+  opacity: 1;
+} 

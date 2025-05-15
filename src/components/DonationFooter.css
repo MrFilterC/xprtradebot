@@ -1,0 +1,55 @@
+.donation-footer {
+  width: 100%;
+  padding: 15px 20px;
+  background-color: #1f2937; /* Slightly different from main panel bg for subtle separation */
+  border-top: 1px solid #2c3e50;
+  text-align: center;
+  margin-top: 40px; /* Space above the footer */
+  box-sizing: border-box;
+}
+
+.donation-footer p {
+  margin: 0;
+  font-size: 0.85rem; /* Smaller font size */
+  color: #a0aec0;    /* Subtler text color */
+  line-height: 1.5;
+  display: flex; /* Align text and address box nicely */
+  align-items: center;
+  justify-content: center;
+}
+
+.sol-address-container {
+  display: inline-flex; /* To keep address and icon on the same line */
+  align-items: center;
+  background-color: #2a3347; /* Darker background for the box */
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 8px; /* Space after "SOL: " text */
+  border: 1px solid #3a4357;
+}
+
+.sol-address-text {
+  color: #14F195; 
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.copy-icon-button-footer {
+  background: none;
+  border: none;
+  color: #a0aec0; /* Icon color, same as surrounding text initially */
+  cursor: pointer;
+  padding: 0 0 0 6px; /* Padding to the left of the icon */
+  display: flex;
+  align-items: center;
+  line-height: 1; /* Ensure icon aligns well with text */
+}
+
+.copy-icon-button-footer svg {
+  width: 14px; /* Match SVG attribute */
+  height: 14px; /* Match SVG attribute */
+}
+
+.copy-icon-button-footer:hover svg {
+  color: #14F195; /* Highlight icon on hover */
+} 

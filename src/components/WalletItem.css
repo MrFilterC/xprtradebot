@@ -1,0 +1,215 @@
+.wallet-item {
+  background-color: #262d3d; /* Darker item background */
+  border: 1px solid #3a4357;
+  border-radius: 6px; /* Smaller radius */
+  padding: 8px 10px; /* Further reduced padding */
+  margin-bottom: 10px; /* Spacing between items */
+  display: flex; /* Keep main layout as flex: info | actions */
+  justify-content: space-between;
+  align-items: flex-start; /* Align actions to the top of their space */
+  transition: background-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Lighter shadow */
+  min-width: 0; /* Help prevent overflow in grid item */
+}
+
+.wallet-item:hover {
+  background-color: #2f384c; /* Hover effect */
+}
+
+.wallet-info {
+  display: grid; /* Use grid for internal layout of info */
+  grid-template-columns: min-content 1fr; /* Adjust columns: Label takes min content, value takes rest */
+  grid-row-gap: 3px; /* Tighter row gap */
+  grid-column-gap: 6px; /* Tighter column gap */
+  align-items: center; /* Center items in each grid cell vertically */
+  flex-grow: 1;
+  min-width: 0; /* Help prevent overflow in grid item */
+}
+
+.wallet-info h3 {
+  grid-column: 1 / -1; /* Spans both columns */
+  font-size: 0.95rem; /* Reduced name size */
+  color: #e0e0e0;
+  margin: 0 0 4px 0; /* Adjusted margin */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes edit button to the right */
+}
+
+.edit-name-button {
+  background: none;
+  border: none;
+  color: #9945FF;
+  cursor: pointer;
+  font-size: 0.85rem; /* Smaller edit icon */
+  padding: 1px 3px;
+}
+
+.edit-name-button:hover {
+  color: #7a37cc;
+}
+
+.edit-name-form {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* Tighter gap */
+  margin-bottom: 4px; /* Adjusted margin */
+}
+
+.edit-name-form input {
+  padding: 5px 7px; /* Tighter padding */
+  font-size: 0.8rem; /* Smaller font */
+  border: 1px solid #3a4357;
+  border-radius: 4px;
+  background-color: #1a2231;
+  color: #f0f0f0;
+}
+
+.edit-name-form .edit-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.edit-name-form .edit-actions button {
+  padding: 4px 8px; /* Tighter padding */
+  font-size: 0.75rem; /* Smaller font */
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-button {
+  background-color: #14F195;
+  border: 1px solid #14F195;
+  color: #0a192f;
+}
+.save-button:hover {
+  background-color: #0dbf7b;
+}
+
+.cancel-button {
+  background-color: #4a5568;
+  border: 1px solid #4a5568;
+  color: #f0f0f0;
+}
+.cancel-button:hover {
+  background-color: #3b4452;
+}
+
+.wallet-key-group,
+.wallet-balance-group {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Spacing between label, value, and copy button */
+  font-size: 0.75rem; /* Smaller font for details */
+  color: #a0aec0; /* Lighter color for details */
+}
+
+.key-label,
+.balance-label {
+  font-weight: 500;
+  color: #b0b8c5; /* Slightly dimmer label */
+  font-size: 0.7rem; /* Further reduced label size */
+  white-space: nowrap;
+  grid-column: 1 / 2; /* Explicitly in first column */
+}
+
+.key-content-wrapper, /* This is the second cell in the key rows */
+.wallet-balance-group .balance-value { /* Balance value is second cell in its row */
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Tighter gap between value and copy button */
+  grid-column: 2 / 3; /* Explicitly in second column */
+  min-width: 0; /* Important for flex children in grid to prevent overflow */
+}
+
+.wallet-balance-group { /* This group itself needs to behave like a grid row for its label and value */
+  display: contents; /* Makes its children direct grid items of .wallet-info */
+}
+
+.key-value {
+  color: #c5cdd8; /* Slightly dimmer key value */
+  font-size: 0.7rem; /* Further reduced key size */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1; /* Allow key value to take space */
+  min-width: 0; /* For ellipsis to work in flex */
+  max-width: 180px; /* More aggressive max-width for key */
+}
+
+.balance-value {
+  color: #14F195;
+  font-weight: 500;
+  font-size: 0.75rem; /* Slightly adjusted balance font */
+  white-space: nowrap;
+}
+
+.loading-balance {
+  color: #a0aec0;
+  font-style: italic;
+  font-size: 0.75rem; /* Consistent with balance value */
+}
+
+.copy-button {
+  background-color: #30394f; /* Darker copy button */
+  color: #a0a8b5; /* Dimmer copy button text */
+  border: 1px solid #404a5f;
+  border-radius: 3px; /* Smaller radius */
+  padding: 2px 5px; /* Tighter padding */
+  font-size: 0.6rem; /* Smaller font */
+  cursor: pointer;
+  margin-left: 0; /* Removed auto margin */
+  flex-shrink: 0; /* Prevent button from shrinking */
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #404a5f;
+  color: #d0d8e5;
+}
+
+.wallet-actions {
+  display: flex;
+  flex-direction: column; /* Stack actions if there were more */
+  align-items: flex-end; /* Align buttons to the right */
+  margin-left: 10px; /* Reduced space from info block */
+  flex-shrink: 0; /* Prevent actions block from shrinking */
+}
+
+.delete-button {
+  background-color: #d44c3c; /* Slightly adjusted delete color */
+  color: white;
+  border: none;
+  border-radius: 3px; /* Smaller radius */
+  padding: 5px 8px; /* Tighter padding */
+  cursor: pointer;
+  font-size: 0.75rem; /* Smaller font */
+  white-space: nowrap;
+}
+
+.delete-button:hover {
+  background-color: #b0392b; /* Darker hover for delete */
+}
+
+/* Ensure the wallet list itself has some padding if not already applied by a parent */
+.wallet-list {
+  /* padding: 5px; */ /* Remove or adjust padding if grid handles spacing */
+  display: grid; /* Make the list a grid container */
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 10px; /* Slightly reduced gap */
+  padding: 5px; /* Reduced padding around the grid */
+}
+
+@media (max-width: 992px) { /* Adjusted breakpoint for better responsiveness */
+  .wallet-list {
+    grid-template-columns: 1fr;
+    gap: 8px; /* Tighter gap on mobile */
+  }
+}
+
+.no-wallets {
+  text-align: center;
+  padding: 20px;
+  color: #a0aec0;
+} 

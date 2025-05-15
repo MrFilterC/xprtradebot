@@ -1,0 +1,341 @@
+.advanced-trade-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Global Mint Input Area */
+.global-mint-input-area {
+  padding: 15px;
+  background-color: #1a2231; /* Similar to other panels for consistency */
+  border-radius: 8px;
+  border: 1px solid #2c3e50;
+  margin-bottom: 10px; /* Space before bundles area */
+}
+
+.global-mint-input-area h3 {
+  text-align: center;
+  color: #14F195;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.bundles-area { /* Added to wrap bundles grid if needed, or can be removed if bundles-grid is direct child */
+  /* No specific styles needed if it's just a wrapper without its own h2 anymore */
+}
+
+.bundles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Increased min-width for more space */
+  gap: 20px;
+}
+
+.bundle-card {
+  background-color: #20293f;
+  border: 1px solid #2c3e50;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Increased gap for elements within card */
+}
+
+.bundle-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px; /* Increased margin */
+}
+
+.bundle-card h3 {
+  color: #14F195;
+  text-align: left;
+  margin-bottom: 0;
+  font-size: 1.2rem; /* Increased size */
+  flex-grow: 1;
+}
+
+.bundle-header-actions {
+  display: flex;
+  gap: 6px; /* Adjusted gap */
+  align-items: center;
+}
+
+.bundle-action-btn {
+  background-color: #2c3e50;
+  color: #f0f0f0;
+  border: 1px solid #3a4357;
+  border-radius: 4px;
+  padding: 6px 10px; /* Adjusted padding */
+  font-size: 0.8rem; /* Adjusted font size */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap; /* Prevent text wrapping */
+}
+
+.bundle-action-btn:hover {
+  background-color: #3a4357;
+  border-color: #505a6b;
+}
+
+.bundle-action-btn:disabled {
+  background-color: #232a37; 
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #2c3e50;
+}
+
+.add-wallet-to-bundle-btn { 
+  background-color: #9945FF;
+  border-color: #9945FF;
+}
+.add-wallet-to-bundle-btn:hover {
+  background-color: #8134e0;
+  border-color: #8134e0;
+}
+
+.dump-btn {
+  background-color: #e74c3c; /* Red for DUMP */
+  border-color: #e74c3c;
+  color: #fff;
+}
+
+.dump-btn:hover {
+  background-color: #c0392b;
+  border-color: #c0392b;
+}
+
+.dump-btn:disabled {
+  background-color: #8b4c3c; /* Darker red when disabled */
+  border-color: #8b4c3c;
+  color: #f0f0f0a0;
+}
+
+.select-all-btn {
+  /* specific styles if needed, e.g., color */
+}
+.deselect-all-btn {
+  /* specific styles if needed, e.g., color */
+}
+
+
+.bundle-wallets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Adjusted for more space per chip */
+  gap: 10px; /* Increased gap */
+  min-height: 70px; 
+  background-color: #1a2231; 
+  padding: 12px; /* Increased padding */
+  border-radius: 6px; /* Slightly larger radius */
+  align-content: flex-start;
+}
+
+.no-wallets-in-bundle {
+  font-style: italic;
+  color: #8b8b8b;
+  text-align: center;
+  font-size: 0.9rem;
+  grid-column: 1 / -1;
+  padding: 10px 0;
+}
+
+.wallet-chip-grid {
+  display: flex;
+  flex-direction: column;
+  background-color: #2a3347;
+  padding: 10px;
+  border-radius: 6px;
+  color: #f0f0f0;
+  border: 2px solid #3a4357;
+  min-height: 120px;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  gap: 4px; /* Reduced gap from 6px */
+}
+
+.wallet-chip-grid:hover {
+  border-color: #505a6b;
+}
+
+.wallet-chip-grid.active-for-trade {
+  border-color: #14F195; 
+  background-color: #25443b; 
+}
+
+.wallet-chip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  width: 100%;
+  margin-bottom: 0; /* Removed margin-bottom: 2px */
+}
+
+.wallet-chip-name {
+  font-weight: 600;
+  font-size: 0.85rem; /* Slightly smaller to fit balance */
+  word-break: break-word; /* allow name to wrap */
+  text-align: left;
+  flex-grow: 1;
+  line-height: 1.2; /* For wrapped names */
+}
+
+.wallet-chip-balance {
+  font-size: 0.75rem;
+  color: #a0aec0;
+  margin-left: 5px; /* Space from name */
+  white-space: nowrap; /* Keep balance on one line */
+  font-weight: 400; /* Normal weight for balance */
+}
+
+.remove-wallet-chip-btn {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  font-size: 1rem; /* Adjusted size */
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  margin-left: 5px;
+}
+.remove-wallet-chip-btn:hover {
+  color: #c0392b;
+}
+
+.wallet-chip-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Tighter gap for inputs */
+  width: 100%;
+  margin-top: auto;
+}
+
+.wallet-input {
+  width: 100%;
+  padding: 5px 7px; /* Slightly reduced padding */
+  border-radius: 3px; /* Smaller radius */
+  background-color: #1a2231;
+  color: #f0f0f0;
+  font-size: 0.75rem; /* Smaller font for inputs */
+  border: 1px solid #3a4357;
+  box-sizing: border-box;
+}
+
+.wallet-input:focus {
+  outline: none;
+  border-color: #9945FF;
+}
+
+.buy-input {
+  border-left: 3px solid #14F195; /* Green hint */
+}
+.buy-input::placeholder {
+  color: #a0aec0;
+}
+
+.sell-input {
+  border-left: 3px solid #e74c3c; /* Red hint */
+}
+.sell-input::placeholder {
+  color: #a0aec0;
+}
+
+
+.wallet-selector-dropdown {
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #1a2231;
+  border: 1px solid #2c3e50;
+  border-radius: 5px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.wallet-selector-dropdown h4 { /* This will be nested inside .wallet-selector-header now */
+  color: #9945FF;
+  margin-bottom: 10px; /* Will be removed or adjusted */
+  font-size: 1rem;
+}
+
+.wallet-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px; /* Moved margin from h4 to here */
+}
+
+.wallet-selector-header h4 {
+  margin-bottom: 0; /* Remove original margin */
+  color: #9945FF;   /* Keep existing style */
+  font-size: 1rem;   /* Keep existing style */
+}
+
+.close-wallet-selector-btn {
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 1.5rem; /* Make 'X' larger */
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 1;
+}
+
+.close-wallet-selector-btn:hover {
+  color: #e74c3c; /* Red on hover */
+}
+
+.wallet-selector-item {
+  padding: 8px 10px;
+  color: #f0f0f0;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wallet-selector-item:hover {
+  background-color: #3a4357;
+}
+
+.wallet-selector-item.disabled {
+  color: #8b8b8b;
+  cursor: not-allowed;
+  background-color: #20293f;
+}
+
+.wallet-selector-item.disabled:hover {
+  background-color: #20293f;
+}
+
+.tick-mark {
+  color: #14F195;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+/* Per-Bundle Trade Action Buttons */
+.bundle-trade-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px; /* Space above buttons */
+}
+
+.bundle-specific-btn {
+  flex: 1; /* Make buttons take equal width */
+  font-size: 0.9rem !important; /* Ensure smaller font for these specific buttons */
+  padding: 10px 5px !important; /* Adjust padding */
+}
+
+
+/* Commenting out styles for shared-trade-inputs and main buy/sell panels as they are removed/repurposed */
+/*
+.advanced-trade-form-container .shared-trade-inputs h3 {
+  color: #14F195;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+*/ 
