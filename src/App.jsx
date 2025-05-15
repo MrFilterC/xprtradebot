@@ -325,6 +325,8 @@ function App() {
     <div className="App">
       <ToastNotifications toasts={toasts} removeToast={removeToast} />
       <GlobalSettingsBar 
+        username={loggedInUsername}
+        onLogout={handleLogout}
         priorityFee={globalPriorityFee}
         setPriorityFee={setGlobalPriorityFee}
         slippage={globalSlippage}
