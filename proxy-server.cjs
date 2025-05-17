@@ -6,15 +6,31 @@ const fetch = require('node-fetch');
 const FormData = require('form-data');
 const upload = multer();
 const app = express();
-const PORT = 3000;
+// PORT'u Render'dan veya yerel için 3000'den al
+const PORT = process.env.PORT || 3000;
 
-// CORS ayarları
-app.use(cors({
-  origin: 'http://localhost:5173', // Vite dev server adresi
+// İzin verilen kaynakların listesi
+const whitelist = [
+  'http://localhost:5173', // Yerel Vite dev sunucusu
+  'https://www.x-pr.trading', // Canlı Vercel siteniz
+  'https://xpr-proxy.onrender.com' // Render proxy'nizin kendi adresi (bazen gerekli olabilir)
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // 'origin' tanımsızsa (örn: aynı kaynaklı istekler veya Postman gibi araçlar) izin ver
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 // IPFS proxy
 app.post('/proxy/ipfs', upload.single('file'), async (req, res) => {
@@ -101,5 +117,5 @@ app.post('/proxy/jito', express.json(), async (req, res) => {
 
 // Sunucuyu başlat
 app.listen(PORT, () => {
-  console.log(`Proxy server running at http://localhost:${PORT}`);
+  console.log(`Proxy server running on port ${PORT}`);
 }); 
