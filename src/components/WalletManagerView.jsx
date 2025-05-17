@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WalletItem from './WalletItem';
 import ImportWalletModal from './ImportWalletModal';
+import ImportMultipleWalletsModal from './ImportMultipleWalletsModal';
 
 const WalletManagerView = ({
   wallets,
@@ -15,6 +16,7 @@ const WalletManagerView = ({
   importError,
   createWallet,
   importWallet,
+  importMultipleWallets,
   closeImportModal,
   deleteWallet,
   editingWalletId,
@@ -28,36 +30,41 @@ const WalletManagerView = ({
   addToast
 }) => {
   const [currentImportError, setCurrentImportError] = useState('');
+  const [showImportMultipleModal, setShowImportMultipleModal] = useState(false);
 
   const handleCreateWallet = () => {
     const result = createWallet();
     if (result) {
-      addLogEntry(result.type || result.status, result.action, result.message, result.details);
-      addToast(result.type || result.status, result.message);
+      addLogEntry(result.status, result.action, result.message, result.details);
     }
   };
 
   const handleImportWallet = async () => {
     const result = importWallet();
     if (result) {
+      addLogEntry(result.status, result.action, result.message, result.details);
       if (result.status === 'success') {
-        addLogEntry('success', result.action, result.message, result.details);
-        addToast('success', result.message);
         setCurrentImportError('');
         closeImportModal();
       } else {
         setCurrentImportError(result.message);
-        addLogEntry('error', result.action, result.message, result.details);
-        addToast('error', result.message);
       }
     }
+  };
+
+  const handleImportMultipleWallets = async (walletsData) => {
+    if (!importMultipleWallets) {
+      console.error("importMultipleWallets function is not provided to WalletManagerView");
+      addToast('error', 'Internal error: Multi-import feature not available.');
+      return [{ status: 'error', name: 'System', message: 'Multi-import not configured.' }];
+    }
+    return await importMultipleWallets(walletsData);
   };
 
   const handleDeleteWallet = (id) => {
     const result = deleteWallet(id);
     if (result) {
       addLogEntry(result.status, result.action, result.message, result.details);
-      addToast(result.status, result.message);
     }
   };
 
@@ -65,7 +72,6 @@ const WalletManagerView = ({
     const result = updateWalletName(id);
     if (result) {
       addLogEntry(result.status, result.action, result.message, result.details);
-      addToast(result.status, result.message);
       if (result.status === 'success') {
         cancelEditingWalletName();
       }
@@ -102,7 +108,14 @@ const WalletManagerView = ({
           className="import-wallet-button" 
           onClick={() => setShowImportModal(true)}
         >
-          Import Wallet
+          Import Wallet (Single)
+        </button>
+        <button 
+          className="import-wallet-button"
+          onClick={() => setShowImportMultipleModal(true)}
+          style={{ marginLeft: '10px' }}
+        >
+          Import Wallets (Multiple)
         </button>
       </div>
       
@@ -140,6 +153,14 @@ const WalletManagerView = ({
         setWalletName={setImportWalletName}
         error={currentImportError}
         onImport={handleImportWallet}
+      />
+
+      <ImportMultipleWalletsModal
+        show={showImportMultipleModal}
+        onClose={() => setShowImportMultipleModal(false)}
+        onImportMultiple={handleImportMultipleWallets}
+        addToast={addToast}
+        addLogEntry={addLogEntry}
       />
     </main>
   );

@@ -116,6 +116,76 @@ export const useWalletManager = (isWalletManagerActive) => {
     }
   };
   
+  // YENİ: Birden fazla cüzdanı içe aktarma
+  const importMultipleWallets = async (walletsToImportData) => {
+    const results = [];
+    let currentWallets = [...wallets]; // Mevcut cüzdan listesinin bir kopyasını al
+
+    for (const walletData of walletsToImportData) {
+      const { name, privateKey } = walletData;
+      try {
+        const secretKey = bs58.decode(privateKey);
+        const keypair = Keypair.fromSecretKey(secretKey);
+        const publicKey = keypair.publicKey.toString();
+
+        const walletExists = currentWallets.some(wallet => wallet.publicKey === publicKey);
+        if (walletExists) {
+          results.push({
+            status: 'error',
+            name: name,
+            message: `Wallet '${name}' (or its public key) already exists.`,
+            details: { publicKey, name }
+          });
+          continue;
+        }
+
+        const newWallet = {
+          id: Date.now().toString() + Math.random().toString(36).substring(2, 7), // Daha benzersiz ID
+          publicKey,
+          privateKey,
+          name: name || `Imported Wallet ${currentWallets.length + 1}` // İsim boşsa varsayılan ata
+        };
+        currentWallets.push(newWallet);
+        results.push({
+          status: 'success',
+          name: name,
+          message: `Wallet '${name}' prepared for import.`,
+          details: { publicKey, name }
+        });
+      } catch (error) {
+        console.error(`Error processing wallet ${name} for import:`, error);
+        results.push({
+          status: 'error',
+          name: name,
+          message: `Invalid private key for '${name}'.`,
+          details: { name, error: error.message }
+        });
+      }
+    }
+
+    // Sadece başarılı bir şekilde hazırlananları state'e ve localStorage'a yaz
+    const successfullyPreparedWallets = results
+        .filter(r => r.status === 'success')
+        .map(r => currentWallets.find(cw => cw.publicKey === r.details.publicKey && cw.name === r.name)); // Eşleşen cüzdanları bul
+    
+    const finalWalletsToAdd = successfullyPreparedWallets.filter(Boolean); // Undefined olanları çıkar
+
+    if (finalWalletsToAdd.length > 0) {
+        const updatedWalletsList = [...wallets, ...finalWalletsToAdd];
+        setWallets(updatedWalletsList);
+        localStorage.setItem('solana-wallets', JSON.stringify(updatedWalletsList));
+    }
+    
+    // Sonuçları, modal'ın işleyebileceği şekilde döndür.
+    // Başarılı olanların mesajını güncelle.
+    return results.map(r => {
+        if (r.status === 'success' && finalWalletsToAdd.some(fw => fw.publicKey === r.details.publicKey && fw.name === r.name)) {
+            return { ...r, message: `Wallet '${r.name}' imported successfully.` };
+        }
+        return r;
+    });
+  };
+
   const closeImportModal = () => {
     setShowImportModal(false);
     setImportPrivateKey('');
@@ -182,6 +252,7 @@ export const useWalletManager = (isWalletManagerActive) => {
     importError,
     createWallet,
     importWallet,
+    importMultipleWallets, // Yeni fonksiyonu export et
     closeImportModal,
     deleteWallet,
     editingWalletId,

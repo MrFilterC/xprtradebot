@@ -4,7 +4,7 @@ import bs58 from 'bs58';
 import { RPC_ENDPOINT } from '../constants'; // Constants
 import { uploadMetadataApi, createTokenApi } from '../api'; // API functions
 
-const TokenLaunchForm = ({ wallets, onLaunchComplete, priorityFee, slippage, pool }) => {
+const TokenLaunchForm = ({ wallets, onLaunchComplete, priorityFee, slippage, pool, addToast }) => {
   const [launchFormData, setLaunchFormData] = useState({
     name: '',
     symbol: '',
@@ -49,18 +49,19 @@ const TokenLaunchForm = ({ wallets, onLaunchComplete, priorityFee, slippage, poo
     setErrorMessage('');
     
     if (!selectedFile) {
-      alert('Please select an image file for your token');
+      // alert('Please select an image file for your token');
+      if (addToast) addToast('error', 'Please select an image file for your token.');
       return;
     }
 
     const selectedWallet = wallets.find(w => w.id === selectedCreatorWalletId);
     if (!selectedWallet) {
-        alert('Please select a creator wallet.');
+        // alert('Please select a creator wallet.');
+        if (addToast) addToast('error', 'Please select a creator wallet.');
         return;
     }
 
     setLaunchLoading(true);
-    if (onLaunchComplete) onLaunchComplete(null, null); 
     
     try {
       const web3Connection = new Connection(RPC_ENDPOINT, 'confirmed');

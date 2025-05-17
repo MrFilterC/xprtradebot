@@ -338,4 +338,89 @@
   margin-bottom: 15px;
   font-size: 1.2rem;
 }
-*/ 
+*/
+
+/* Batch Set Controls Styling - Updated for side-by-side layout */
+.bundle-batch-set-controls {
+  display: flex;
+  flex-direction: row; /* Yan yana hizalama */
+  /* justify-content: space-between; */ /* Gruplar arasında boşluk bırak, space-around daha iyi olabilir */
+  justify-content: space-around; /* Grupları biraz daha yayar */
+  align-items: center; /* Dikeyde ortala */
+  gap: 10px; /* Gruplar arası yatay boşluk */
+  margin-top: 5px;
+  margin-bottom: 12px;
+  padding: 10px;
+  border: 1px solid #2c3e50;
+  border-radius: 6px;
+  background-color: #1a2231;
+}
+
+.batch-set-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* flex: 1; /* Kaldırıldı, içeriklerine göre daralsınlar */
+}
+
+.batch-label {
+  font-size: 0.8em;
+  color: #a0aec0;
+  margin-right: 4px;
+  min-width: auto; /* min-width'i kaldırdık, sığmazsa alt satıra geçebilir veya esneyebilir */
+  white-space: nowrap;
+}
+
+.batch-input {
+  width: 50px; /* Inputları biraz daha daralttık */
+  padding: 5px 6px;
+  font-size: 0.85em;
+  border: 1px solid #3a4357;
+  background-color: #20293f;
+  color: #e0e0e0;
+  border-radius: 4px;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+.batch-input::-webkit-outer-spin-button,
+.batch-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.batch-set-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 8px; /* Buton iç boşluğunu biraz daha azalttık */
+  font-size: 0.8em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap; 
+  flex-shrink: 0;
+}
+
+.batch-set-button:hover {
+  background-color: #0056b3; /* Hover için daha koyu mavi */
+}
+
+.batch-set-button:disabled {
+  background-color: #4a5568; /* Devre dışı buton rengi */
+  color: #a0aec0; /* Devre dışı yazı rengi */
+  cursor: not-allowed;
+}
+
+/* Wallet Chip inputlarını da biraz küçültelim, eğer çok büyüklerse */
+.wallet-chip-inputs {
+  gap: 5px; /* Buy ve Sell inputları arasındaki boşluk */
+}
+
+.wallet-input.buy-input,
+.wallet-input.sell-input {
+  font-size: 0.85em; /* Cüzdan içi inputların yazı boyutu */
+  padding: 4px 6px; /* Cüzdan içi inputların iç boşluğu */
+  max-width: 70px; /* Cüzdan içi inputların genişliğini sınırlayalım */
+} 

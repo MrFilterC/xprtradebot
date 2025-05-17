@@ -4,7 +4,7 @@ import bs58 from 'bs58';
 import { RPC_ENDPOINT } from '../constants';
 import { uploadMetadataApi, createBundleTransactionsApi, sendBundleToJitoApi } from '../api';
 
-const BundleLaunchForm = ({ wallets, onBundleLaunchComplete, priorityFee, slippage, pool }) => {
+const BundleLaunchForm = ({ wallets, onBundleLaunchComplete, priorityFee, slippage, pool, addToast }) => {
   const [bundleFormData, setBundleFormData] = useState({
     selectedBundleWalletIds: {
         wallet1: '', wallet2: '', wallet3: '', wallet4: '', wallet5: ''
@@ -66,13 +66,13 @@ const BundleLaunchForm = ({ wallets, onBundleLaunchComplete, priorityFee, slippa
     setBundleErrorMessage('');
 
     if (!selectedBundleFile) {
-      alert('Please select an image file for your token');
+      if (addToast) addToast('error', 'Please select an image file for your token.');
       return;
     }
 
     const mainWallet = wallets.find(w => w.id === selectedMainWalletId);
     if (!mainWallet) {
-        alert('Please select a main wallet for bundle launch.');
+        if (addToast) addToast('error', 'Please select a main wallet for bundle launch.');
         return;
     }
 
@@ -80,12 +80,11 @@ const BundleLaunchForm = ({ wallets, onBundleLaunchComplete, priorityFee, slippa
     const firstBundleWallet = firstBundleWalletId ? wallets.find(w => w.id === firstBundleWalletId) : null;
 
     if (!firstBundleWallet) {
-      alert('Please select at least one bundle wallet (Bundle Wallet 1).');
+      if (addToast) addToast('error', 'Please select at least one bundle wallet (Bundle Wallet 1).');
       return;
     }
 
     setBundleLoading(true);
-    if (onBundleLaunchComplete) onBundleLaunchComplete(null, []);
 
     try {
       const web3Connection = new Connection(RPC_ENDPOINT, 'confirmed');

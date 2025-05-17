@@ -1194,4 +1194,136 @@ input[type="file"] {
   background-color: #9945FF; /* Purple for active buy amount */
   color: white;
   border-color: #9945FF;
+}
+
+/* QuickLaunchForm specific styles (can be moved to a separate QuickLaunchForm.css if preferred) */
+/* .quick-launch-form .form-group label { ... } */ /* Covered by .launch-form label */
+/* .quick-launch-form .form-group input[type="text"], ... */ /* Covered by .launch-form input/select */
+
+/* Styles for the row of launch buttons in QuickLaunchForm */
+.quick-launch-form .launch-buttons-group .button-row {
+  display: flex;
+  justify-content: space-around; /* Distributes space around items */
+  gap: 10px; /* Space between buttons */
+  margin-top: 10px;
+}
+
+/* Ensuring Quick Launch buttons take full width and match general submit button style if needed */
+.quick-launch-form .launch-buttons-group .button.primary {
+  flex-grow: 1;
+  /* padding: 14px; */ /* Match .submit-button padding if needed */
+  /* font-size: 1.1rem; */ /* Match .submit-button font-size if needed */
+  /* font-weight: 700; */ /* Match .submit-button font-weight if needed */
+  /* background-color: #14F195; */ /* Match .submit-button background if using general submit */
+  /* color: #0f1624; */ /* Match .submit-button text color if using general submit */
+  /* These styles are inherited from .button.primary, check if .submit-button styles are more desirable */
+}
+
+.quick-launch-form .file-name-display {
+  font-size: 0.9em;
+  color: #a0aec0; /* Lighter color for dark theme, similar to other secondary text */
+  margin-top: 8px;
+  padding-left: 2px;
+}
+
+/* Disabled state styles for better UX - these might be generic enough or inherited */
+/* .quick-launch-form .form-group input:disabled, ... */ /* Likely covered by global or .launch-form styles */
+
+/* Make sure the h3 title in QuickLaunchForm matches other panel titles if not already */
+.quick-launch-form h3 {
+  color: #9945FF; /* Standard panel title color */
+  font-size: 1.5rem; /* Or match .panel-section h2 if that's more appropriate */
+  text-align: center;
+  margin-bottom: 25px; /* Space below title */
+}
+
+/* Quick Bundle Form Specific Styles */
+.quick-bundle-form .bundle-wallet-config {
+  display: flex;
+  align-items: flex-end; /* Aligns input and button bottoms */
+  gap: 10px; /* Space between items in the row */
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #2c3e50; /* Darker border to match theme */
+  border-radius: 8px;
+  background-color: #1f2937; /* Slightly different background for grouping */
+}
+
+.quick-bundle-form .bundle-wallet-config .form-group {
+  margin-bottom: 0; /* Remove default bottom margin from form-group inside this row */
+}
+
+/* Smaller button variant */
+.button-small {
+  padding: 5px 10px !important;
+  font-size: 0.85rem !important;
+  min-width: auto !important; /* Override nav-button or other broader button styles if necessary */
+}
+
+.quick-bundle-form .delete-button.button-small {
+  background-color: #e53e3e !important; /* Red for delete */
+  color: white !important;
+  border: none;
+  /* margin-bottom: 0 !important; */ /* Let align-items handle vertical alignment */
+  height: calc(2.25rem + 2px); /* Match typical input height + border */
+  line-height: 1.5; /* Adjust if text is not centered */
+}
+
+.quick-bundle-form .delete-button.button-small:hover {
+  background-color: #c53030 !important; /* Darker red on hover */
+}
+
+.quick-bundle-form .button.secondary.button-small { /* For '+ Add Bundle Wallet Slot' */
+  background-color: #4A5568 !important; /* A neutral secondary color */
+  color: white !important;
+  border: 1px solid #2c3e50;
+  margin-bottom: 15px; /* Added back from JSX for spacing */
+}
+
+.quick-bundle-form .button.secondary.button-small:hover {
+  background-color: #2D3748 !important; /* Darker secondary on hover */
+}
+
+/* Ensure launch buttons in Quick Bundle are side-by-side */
+.quick-bundle-form .button-row {
+  display: flex;
+  justify-content: space-around; 
+  gap: 10px; 
+}
+
+.quick-bundle-form .button-row .submit-button {
+  flex-grow: 1; /* Allows buttons to share space */
+  width: auto;   /* Overrides 100% width if set by .submit-button globally */
+  margin-top: 0; /* Remove margin-top if .submit-button has it globally */
+  /* margin-left: 5px; */ /* Add some space between buttons */
+  /* margin-right: 5px; */ /* Commented out, gap handles spacing */
+}
+
+/* Styles for the new launch amount override section */
+.launch-amount-override-section {
+  display: flex;
+  align-items: flex-end; /* Align input bottoms with button */
+  gap: 10px;
+  margin-bottom: 10px; /* Space before the actual launch buttons */
+  padding: 15px;
+  border: 1px solid #2c3e50;
+  border-radius: 8px;
+  background-color: #1f2937; 
+}
+
+.launch-amount-override-section .form-group {
+  margin-bottom: 0; /* Remove default bottom margin */
+  flex: 1; /* Allow inputs to take space */
+}
+
+.launch-amount-override-section .button.secondary {
+  padding: 10px 15px; /* Adjusted padding to match input height better */
+  height: calc(2.25rem + 8px); /* Match typical input height + border + padding diff */
+  line-height: 1.5; /* Ensure text is vertically centered */
+  background-color: #4A5568 !important; 
+  color: white !important;
+  border: 1px solid #2c3e50;
+}
+.launch-amount-override-section .button.secondary:hover {
+  background-color: #2D3748 !important;
 } 

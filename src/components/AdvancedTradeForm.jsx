@@ -26,6 +26,7 @@ function AdvancedTradeForm({
   const [errorMessage, setErrorMessage] = useState('');
   
   const [walletSelectorOpenForBundle, setWalletSelectorOpenForBundle] = useState(null);
+  const [batchInputValues, setBatchInputValues] = useState({}); // New state for batch inputs
 
   const handleGlobalInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,8 +136,92 @@ function AdvancedTradeForm({
     );
   };
 
+  const handleBatchInputChange = (bundleIndex, type, subType, value) => {
+    setBatchInputValues(prev => ({
+      ...prev,
+      [bundleIndex]: {
+        ...(prev[bundleIndex] || {}),
+        [type]: {
+          ...(prev[bundleIndex]?.[type] || {}),
+          [subType]: value
+        }
+      }
+    }));
+  };
+
+  const handleSetRandomAllForBundle = (bundleIndex, type) => {
+    const bundle = bundleGroupsConfig[bundleIndex];
+    if (!bundle) {
+        addToast('error', 'Bundle configuration not found.');
+        return;
+    }
+    const bundleInputs = batchInputValues[bundleIndex]?.[type];
+    const bundleName = bundle.name || `Bundle ${bundleIndex + 1}`;
+
+    if (!bundleInputs || 
+        String(bundleInputs.min).trim() === '' || 
+        String(bundleInputs.max).trim() === '') {
+      addToast('error', `Please enter both min and max values for ${type} in ${bundleName}.`);
+      return;
+    }
+
+    const min = parseFloat(bundleInputs.min);
+    const max = parseFloat(bundleInputs.max);
+
+    if (isNaN(min) || isNaN(max) || min < 0 || max < 0) {
+      addToast('error', `Invalid min/max for ${type} in ${bundleName}. Please enter positive numbers.`);
+      return;
+    }
+    if (min > max) {
+      addToast('error', `Min value cannot be greater than max value for ${type} in ${bundleName}.`);
+      return;
+    }
+    if (type === 'sell' && (min > 100 || max > 100)) {
+      addToast('error', `Sell percentage cannot exceed 100 for ${bundleName}.`);
+      return;
+    }
+
+    const targetProperty = type === 'buy' ? 'buyAmountSol' : 'sellPercentage';
+    const decimals = type === 'buy' ? 3 : 0; 
+
+    setBundleGroupsConfig(prevGroups =>
+      prevGroups.map((group, index) => {
+        if (index === bundleIndex) {
+          if (!group.walletsConfig || group.walletsConfig.length === 0) {
+            addToast('info', `No wallets in ${group.name} to set ${type} values for.`);
+            return group;
+          }
+          return {
+            ...group,
+            walletsConfig: group.walletsConfig.map(wc => {
+              let randomValue = Math.random() * (max - min) + min;
+              if (type === 'buy') {
+                randomValue = parseFloat(randomValue.toFixed(decimals));
+              } else { 
+                randomValue = Math.floor(randomValue);
+              }
+              randomValue = Math.max(min, Math.min(max, randomValue)); 
+              if (type === 'sell') randomValue = Math.min(100, randomValue);
+
+              return {
+                ...wc,
+                [targetProperty]: String(randomValue)
+              };
+            })
+          };
+        }
+        return group;
+      })
+    );
+    addToast('success', `All ${type} amounts for ${bundleName} randomly set between ${min}${type === 'buy' ? ' SOL' : '%'} and ${max}${type === 'buy' ? ' SOL' : '%'}.`);
+  };
+
   const executeTradeAction = async (bundleIndex, actionType, walletsToProcess, getAmountCallback) => {
     const bundle = bundleGroupsConfig[bundleIndex];
+    if (!bundle) {
+        addToast('error', 'Bundle configuration not found.');
+        return;
+    }
     if (walletsToProcess.length === 0) {
       addToast('error', `No wallets to process for ${actionType} in ${bundle.name}.`);
       return;
@@ -197,7 +282,7 @@ function AdvancedTradeForm({
                 amount: amountForApi,
                 slippage: parseInt(slippage),
                 priorityFee: parseFloat(priorityFee),
-                pool: pool,
+                pool: pool, 
             };
             
             const transactionBuffer = await sendTradeTransactionApi(tradePayload);
@@ -206,30 +291,40 @@ function AdvancedTradeForm({
             tx.sign([signerKeyPair]);
             currentSignature = await web3Connection.sendTransaction(tx);
             currentStatus = 'success';
-            addToast('success', `${actionType.toUpperCase()} for ${wallet.name} in ${bundle.name} successful!`); 
-        } catch (error) {
-            currentError = error.message || `Error processing ${actionType} for ${wallet.name}`;
-            addToast('error', `${actionType.toUpperCase()} failed for ${wallet.name}: ${currentError}`);
+            console.log(`Advanced Transaction (${actionType}) for ${wallet.name} (${wallet.publicKey}) in bundle ${bundle.name}: https://solscan.io/tx/${currentSignature}`);
+
+        } catch (err) {
+            console.error(`Error during advanced ${actionType} for ${wallet.name}:`, err);
+            currentError = err.message || `An unexpected error occurred during advanced ${actionType}.`;
+            if (err.message && err.message.toLowerCase().includes('reached end of buffer unexpectedly')) {
+                currentError = 'Failed to prepare transaction. The received data was incomplete or invalid. Please check proxy server logs.';
+            }
+            currentStatus = 'error';
+        } finally {
+            setLoadingStates(prev => ({ ...prev, [`bundle-${bundleIndex}-${actionType}-${wallet.id}`]: false }));
+            onTradeComplete(currentStatus, currentSignature, currentError, tradeDetailsForLog);
         }
-        onTradeComplete(currentStatus, currentSignature, currentError, tradeDetailsForLog);
     }
     setLoadingStates(prev => ({ ...prev, [loadingKey]: false }));
   };
 
   const handleBundleBuy = (bundleIndex) => {
     const bundle = bundleGroupsConfig[bundleIndex];
+    if (!bundle) return;
     const activeWalletsInBundle = bundle.walletsConfig.filter(wc => bundle.activeInTradeWalletIds.includes(wc.walletId));
     executeTradeAction(bundleIndex, 'buy', activeWalletsInBundle, wc => wc.buyAmountSol);
   };
 
   const handleBundleSell = (bundleIndex) => {
     const bundle = bundleGroupsConfig[bundleIndex];
+    if (!bundle) return;
     const activeWalletsInBundle = bundle.walletsConfig.filter(wc => bundle.activeInTradeWalletIds.includes(wc.walletId));
     executeTradeAction(bundleIndex, 'sell', activeWalletsInBundle, wc => wc.sellPercentage);
   };
 
   const handleBundleDump = (bundleIndex) => {
     const bundle = bundleGroupsConfig[bundleIndex];
+    if (!bundle) return;
     const allAssignedWalletsInBundle = bundle.walletsConfig;
     if(allAssignedWalletsInBundle.length === 0) {
         addToast('info', `No wallets in ${bundle.name} to DUMP.`);
@@ -305,6 +400,68 @@ function AdvancedTradeForm({
                   </button>
                 </div>
               </div>
+
+              <div className="bundle-batch-set-controls">
+                <div className="batch-set-group">
+                  <span className="batch-label">Buy (SOL):</span>
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={batchInputValues[bundleIndex]?.buy?.min ?? ''}
+                    onChange={(e) => handleBatchInputChange(bundleIndex, 'buy', 'min', e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="batch-input batch-input-min"
+                    min="0" step="any"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={batchInputValues[bundleIndex]?.buy?.max ?? ''}
+                    onChange={(e) => handleBatchInputChange(bundleIndex, 'buy', 'max', e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="batch-input batch-input-max"
+                    min="0" step="any"
+                  />
+                  <button 
+                    onClick={() => handleSetRandomAllForBundle(bundleIndex, 'buy')}
+                    disabled={!bundle || !bundle.walletsConfig || bundle.walletsConfig.length === 0}
+                    className="batch-set-button"
+                    title={`Set random SOL buy amount for all wallets in ${bundle.name}`}
+                  >
+                    Set Buy
+                  </button>
+                </div>
+                <div className="batch-set-group">
+                  <span className="batch-label">Sell (%):</span>
+                  <input
+                    type="number"
+                    placeholder="Min"
+                    value={batchInputValues[bundleIndex]?.sell?.min ?? ''}
+                    onChange={(e) => handleBatchInputChange(bundleIndex, 'sell', 'min', e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="batch-input batch-input-min"
+                    min="0" max="100" step="1"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Max"
+                    value={batchInputValues[bundleIndex]?.sell?.max ?? ''}
+                    onChange={(e) => handleBatchInputChange(bundleIndex, 'sell', 'max', e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    className="batch-input batch-input-max"
+                    min="0" max="100" step="1"
+                  />
+                  <button 
+                    onClick={() => handleSetRandomAllForBundle(bundleIndex, 'sell')}
+                    disabled={!bundle || !bundle.walletsConfig || bundle.walletsConfig.length === 0}
+                    className="batch-set-button"
+                    title={`Set random % sell amount for all wallets in ${bundle.name}`}
+                  >
+                    Set Sell
+                  </button>
+                </div>
+              </div>
+
               <div className="bundle-wallets">
                 {bundle.walletsConfig.length === 0 ? (
                   <p className="no-wallets-in-bundle">No wallets assigned. Click '+ Wallets' to add.</p>
